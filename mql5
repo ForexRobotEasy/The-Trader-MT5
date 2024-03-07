@@ -1,0 +1,102 @@
+
+// Program Name: The Trader MT5
+// Developer: Forex Robot Easy Team
+// Developer's Site: forexroboteasy.com
+
+// Include necessary libraries and dependencies
+#include <Trade\Trade.mqh>
+#include <Trade\SymbolInfo.mqh>
+#include <Trade\PositionInfo.mqh>
+
+// Define global variables
+double riskPercentage = 2.5; // Risk percentage for position sizing
+int maxExposure = 3; // Maximum number of open positions
+int leverage = 100; // Default leverage
+
+// Define trade functions
+void OpenBuyOrder(string symbol, double volume, double stopLoss, double takeProfit)
+{
+    CTrade trade;
+    trade.Buy(symbol, volume, stopLoss, takeProfit);
+}
+
+void OpenSellOrder(string symbol, double volume, double stopLoss, double takeProfit)
+{
+    CTrade trade;
+    trade.Sell(symbol, volume, stopLoss, takeProfit);
+}
+
+void SetStopLoss(double stopLoss)
+{
+    CTrade trade;
+    trade.SetStopLoss(stopLoss);
+}
+
+void SetTakeProfit(double takeProfit)
+{
+    CTrade trade;
+    trade.SetTakeProfit(takeProfit);
+}
+
+void ClosePosition(string symbol)
+{
+    CTrade trade;
+    trade.PositionClose(symbol);
+}
+
+// Define main function
+void OnTick()
+{
+    string symbol = Symbol(); // Get current symbol
+    double ask = SymbolInfoDouble(symbol, SYMBOL_ASK); // Get current ask price
+    double bid = SymbolInfoDouble(symbol, SYMBOL_BID); // Get current bid price
+    double spread = SymbolInfoDouble(symbol, SYMBOL_SPREAD); // Get current spread
+
+    // Perform market analysis and identify entry and exit points
+    // ...
+
+    // Calculate position size based on risk percentage
+    double equity = AccountInfoDouble(ACCOUNT_EQUITY);
+    double riskAmount = equity * (riskPercentage / 100);
+    double positionSize = riskAmount / (stopLoss - entryPrice);
+
+    // Check if maximum exposure limit is reached
+    int totalPositions = PositionTotal();
+    if (totalPositions >= maxExposure)
+    {
+        Print('Maximum exposure limit reached. Cannot open new position.');
+        return;
+    }
+
+    // Check account leverage
+    int accountLeverage = AccountInfoInteger(ACCOUNT_LEVERAGE);
+    if (accountLeverage != leverage)
+    {
+        Print('Account leverage is not set to the default value. Please adjust leverage settings.');
+        return;
+    }
+
+    // Open buy or sell order based on market analysis
+    if (// condition to open buy order)
+    {
+        OpenBuyOrder(symbol, positionSize, stopLoss, takeProfit);
+    }
+    else if (// condition to open sell order)
+    {
+        OpenSellOrder(symbol, positionSize, stopLoss, takeProfit);
+    }
+}
+
+// Define initialization function
+void OnInit()
+{
+    // Set up initial parameters and configurations
+    // ...
+}
+
+// Define deinitialization function
+void OnDeinit(const int reason)
+{
+    // Clean up and perform necessary actions before deinitialization
+    // ...
+}
